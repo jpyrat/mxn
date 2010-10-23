@@ -515,10 +515,6 @@ Marker: {
 			marker.mapstraction_marker.click.fire();
 		});
 		
-		google.maps.event.addListener(marker, 'dragend', function() {
-			marker.mapstraction_marker.dragend.fire();
-		});
-		
 		return marker;
 	},
 
