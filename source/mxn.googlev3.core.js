@@ -544,7 +544,9 @@ Marker: {
 	},
 
 	update: function() {
-		// TODO: Add provider code
+		point = new mxn.LatLonPoint();
+		point.fromProprietary('googlev3', this.proprietary_marker.getPosition());
+		this.location = point;
 	}
 	
 },
