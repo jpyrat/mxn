@@ -12,7 +12,7 @@ Mapstraction: {
 				mapTypeControl: false,
 				mapTypeControlOptions: null,
 				navigationControl: false,
-			    navigationControlOptions: null,
+			        navigationControlOptions: null,
 				scrollwheel: false
 			};
 
@@ -54,9 +54,13 @@ Mapstraction: {
 				me.moveendHandler(me);
 				me.endPan.fire();
 			});
+			// deal with initial tile loading
+			var loadListener = google.maps.event.addListener(map, 'tilesloaded', function(){
+				me.load.fire();
+				google.maps.event.removeListener( loadListener );
+			});
 			this.maps[api] = map;
 			this.loaded[api] = true;
-			me.load.fire();
 		}
 		else {
 			alert(api + ' map script not imported');
@@ -250,6 +254,9 @@ Mapstraction: {
 	getBounds: function () {
 		var map = this.maps[this.api];
 		var gLatLngBounds = map.getBounds();
+		if (!gLatLngBounds) {
+			throw 'Bounds not available, map must be initialized';
+		}
 		var sw = gLatLngBounds.getSouthWest();
 		var ne = gLatLngBounds.getNorthEast();
 		return new mxn.BoundingBox(sw.lat(), sw.lng(), ne.lat(), ne.lng());
@@ -315,7 +322,7 @@ Mapstraction: {
 	},
 
 	setImagePosition: function(id, oContext) {
-		// unused
+		// do nothing
 	},
 	
 	addOverlay: function(url, autoCenterAndZoom) {
@@ -544,7 +551,7 @@ Marker: {
 	},
 
 	update: function() {
-		point = new mxn.LatLonPoint();
+		var point = new mxn.LatLonPoint();
 		point.fromProprietary('googlev3', this.proprietary_marker.getPosition());
 		this.location = point;
 	}
