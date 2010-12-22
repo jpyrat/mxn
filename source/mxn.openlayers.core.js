@@ -9,10 +9,10 @@ mxn.register('openlayers', {
 				element.id,
 				{
 					maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-					maxResolution:156543,
-					numZoomLevels:18,
-					units:'meters',
-					projection: "EPSG:900913"
+					maxResolution: 156543,
+					numZoomLevels: 18,
+					units: 'meters',
+					projection: 'EPSG:900913'
 				}
 			);
 			
@@ -344,7 +344,9 @@ mxn.register('openlayers', {
 			var bounds = new OpenLayers.Bounds();
 			bounds.extend(new mxn.LatLonPoint(south,west).toProprietary(this.api));
 			bounds.extend(new mxn.LatLonPoint(north,east).toProprietary(this.api));
-			var overlay = new OpenLayers.Layer.Image(id, src,
+			var overlay = new OpenLayers.Layer.Image(
+				id, 
+				src,
 				bounds,
 				new OpenLayers.Size(oContext.imgElm.width, oContext.imgElm.height),
 				{'isBaseLayer': false, 'alwaysInRange': true}
@@ -367,7 +369,7 @@ mxn.register('openlayers', {
 				}),
 				'projection': new OpenLayers.Projection('EPSG:4326')
 			});
-			if(autoCenterAndZoom) {
+			if (autoCenterAndZoom) {
 				var setExtent = function() {
 					dataExtent = this.getDataExtent();
 					map.zoomToExtent(dataExtent);
