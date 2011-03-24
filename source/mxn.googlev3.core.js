@@ -292,54 +292,14 @@ Mapstraction: {
 	},
 
 	addImageOverlay: function(id, src, opacity, west, south, east, north, oContext) {
-		var overlay;
-		var me = this;
 		var map = this.maps[this.api];
-
+		
 		var imageBounds = new google.maps.LatLngBounds(
 			new google.maps.LatLng(south,west),
 			new google.maps.LatLng(north,east));
 		
-		ImageOverlay.prototype = new google.maps.OverlayView();
-		
-		overlay = new ImageOverlay(imageBounds, src, map);
-		
-		function ImageOverlay(bounds, image, map) {
-			this.bounds_ = bounds;
-			this.image_ = image;
-			this.map_ = map;
-			this.div_ = null;
-			this.setMap(map);
-		}
-
-		ImageOverlay.prototype.onAdd = function() {
-			var img = document.createElement("img");
-			img.src = this.image_;
-			img.id = id;
-			img.style.position = "absolute";
-			img.style.width = "100%";
-			img.style.height = "100%";
-			this.img_ = img;
-			var panes = this.getPanes();
-			panes.overlayImage.appendChild(img);
-		}
-
-		ImageOverlay.prototype.draw = function() {
-			var overlayProjection = this.getProjection();
-			var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-			var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-			var img = this.img_;
-			img.style.left = sw.x + 'px';
-			img.style.top = ne.y + 'px';
-			img.style.width = (ne.x - sw.x) + 'px';
-			img.style.height = (sw.y - ne.y) + 'px';
-			me.setImageOpacity(id, opacity);
-		}
-		
-		ImageOverlay.prototype.onRemove = function() {
-			this.div_.parentNode.removeChild(this.div_);
-			this.div_ = null;
-		}
+		var groundOverlay = new google.maps.GroundOverlay(src, imageBounds);
+		groundOverlay.setMap(map);
 	},
 
 	setImagePosition: function(id, oContext) {
