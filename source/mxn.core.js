@@ -991,35 +991,16 @@ Mapstraction.prototype.addJSON = function(json) {
 			case "Point":
 				marker = new Marker(new LatLonPoint(item.geometry.coordinates[0],item.geometry.coordinates[1]));
 				markers.push(marker);
-				this.addMarkerWithData(marker,{
-					label : item.properties.title,
-					infoBubble : "<strong>" + item.properties.title + "</strong><p>" + item.properties.description + "</p>",
-					icon : item.properties.icon,
-					iconSize : item.properties.icon_size,
-					iconAnchor : item.properties.icon_anchor,
-					iconShadow : item.properties.icon_shadow,
-					iconShadowSize : item.properties.icon_shadow_size,
-					infoDiv : "",
-					draggable : item.properties.draggable ? item.properties.draggable : false,
-					hover : item.properties.hover ?  item.properties.hover : false,
-					hoverIcon : item.properties.hover_icon ? item.properties.hover_icon : "",
-					groupName : item.properties.source_id,
-					date : "new Date(\""+item.properties.date+"\")",
-					marker : item.properties.id
-				});
+				this.addMarkerWithData(marker,item.properties);
 				break;
 			case "Polygon":
+                // Create an array of LatLongPoint objects from the coordinates
 				var points = [];
+                for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
+                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][0], item.geometry.coordinates[pi][1])
+                }
 				polyline = new Polyline(points);
-				mapstraction.addPolylineWithData(polyline,{
-					color : item.properties.line_color,
-					width : item.properties.line_width,
-					opacity : item.properties.line_opacity,
-					fillColor : item.properties.poly_color,
-					date : "new Date(\""+item.properties.date+"\")",
-					category : item.properties.source_id,
-					polygon : true
-				});
+				mapstraction.addPolylineWithData(polyline,item.properties);
 				markers.push(polyline);
 				break;
 			case "LineString":
