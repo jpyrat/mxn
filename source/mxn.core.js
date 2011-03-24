@@ -950,6 +950,23 @@ Mapstraction.prototype.setImagePosition = function(id) {
 	imgElement.style.height = (oContext.pixels.bottom - oContext.pixels.top).toString() + 'px';
 };
 
+/**
+ * Adds geoJSON data to the map
+ *
+ * Data should conform to the GeoJSON spec. The relevant WithData function will
+ * be called with the item.properties object. Set any relevant properties there.
+ * For example:
+ * { "type": "FeatureCollection",
+ *  "features": [
+ *    { "type": "Feature",
+ *      "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+ *      "properties": {"prop0": "value0", "icon": "http://icon.url/", "infoBubble": "Contents of bubble"}
+ *      }
+ *    }
+ *  }
+ *
+ * @param {json} GeoJSON formatted JSON object. Keys for properties are: id, title, description, date, icon, icon_size, icon_shadow, icon_shadow_size.
+ */
 Mapstraction.prototype.addJSON = function(json) {
 	var features;
 	if (typeof(json) == "string") {
@@ -959,7 +976,6 @@ Mapstraction.prototype.addJSON = function(json) {
 	}
 	features = features.features;
 	var map = this.maps[this.api];
-	var html = "";
 	var item;
 	var polyline;
 	var marker;
@@ -973,39 +989,52 @@ Mapstraction.prototype.addJSON = function(json) {
 		item = features[i];
 		switch(item.geometry.type) {
 			case "Point":
-				html = "<strong>" + item.title + "</strong><p>" + item.description + "</p>";
-				marker = new Marker(new LatLonPoint(item.geometry.coordinates[1],item.geometry.coordinates[0]));
+				marker = new Marker(new LatLonPoint(item.geometry.coordinates[0],item.geometry.coordinates[1]));
 				markers.push(marker);
 				this.addMarkerWithData(marker,{
-					infoBubble : html,
-					label : item.title,
-					date : "new Date(\""+item.date+"\")",
-					iconShadow : item.icon_shadow,
-					marker : item.id,
-					iconShadowSize : item.icon_shadow_size,
-					icon : item.icon,
-					iconSize : item.icon_size,
-					category : item.source_id,
-					draggable : false,
-					hover : false
+					label : item.properties.title,
+					infoBubble : "<strong>" + item.properties.title + "</strong><p>" + item.properties.description + "</p>",
+					icon : item.properties.icon,
+					iconSize : item.properties.icon_size,
+					iconAnchor : item.properties.icon_anchor,
+					iconShadow : item.properties.icon_shadow,
+					iconShadowSize : item.properties.icon_shadow_size,
+					infoDiv : "",
+					draggable : item.properties.draggable ? item.properties.draggable : false,
+					hover : item.properties.hover ?  item.properties.hover : false,
+					hoverIcon : item.properties.hover_icon ? item.properties.hover_icon : "",
+					groupName : item.properties.source_id,
+					date : "new Date(\""+item.properties.date+"\")",
+					marker : item.properties.id
 				});
 				break;
 			case "Polygon":
 				var points = [];
 				polyline = new Polyline(points);
 				mapstraction.addPolylineWithData(polyline,{
-					fillColor : item.poly_color,
-					date : "new Date(\""+item.date+"\")",
-					category : item.source_id,
-					width : item.line_width,
-					opacity : item.line_opacity,
-					color : item.line_color,
+					color : item.properties.line_color,
+					width : item.properties.line_width,
+					opacity : item.properties.line_opacity,
+					fillColor : item.properties.poly_color,
+					date : "new Date(\""+item.properties.date+"\")",
+					category : item.properties.source_id,
 					polygon : true
 				});
 				markers.push(polyline);
 				break;
+			case "LineString":
+                // Create an array of LatLongPoint objects from the coordinates
+				var points = [];
+                for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
+                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][0], item.geometry.coordinates[pi][1])
+                }
+				polyline = new Polyline(points);
+                // A LineString is an unclosed polyline in mapstraction
+                item.properties.closed = false;
+				mapstraction.addPolylineWithData(polyline,item.properties);
+				markers.push(polyline);
+				break;
 			default:
-		// console.log("Geometry: " + features.items[i].geometry.type);
 		}
 	}
 	return markers;
@@ -1508,7 +1537,7 @@ Marker.prototype.setLabel = function(labelText) {
 
 /**
  * addData conviniently set a hash of options on a marker
- * @param {Object} options An object literal hash of key value pairs. Keys are: label, infoBubble, icon, iconShadow, infoDiv, draggable, hover, hoverIcon, openBubble, groupName.
+ * @param {Object} options An object literal hash of key value pairs. Keys are: label, infoBubble, icon, iconSize, iconAnchor, iconShadow, iconShadowSize, infoDiv, draggable, hover, hoverIcon, openBubble, closeBubble, groupName.
  */
 Marker.prototype.addData = function(options){
 	for(var sOptKey in options) {
@@ -1536,7 +1565,7 @@ Marker.prototype.addData = function(options){
 						this.setShadowIcon(options.iconShadow, [ options.iconShadowSize[0], options.iconShadowSize[1] ]);
 					}
 					else {
-						this.setIcon(options.iconShadow);
+						this.setShadowIcon(options.iconShadow);
 					}
 					break;
 				case 'infoDiv':
