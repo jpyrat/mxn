@@ -545,16 +545,16 @@ Marker: {
 Polyline: {
 
 	toProprietary: function() {
-		var points =[];
+		var points = [];
 		for(var i =0, length = this.points.length; i < length; i++) {
 			points.push(this.points[i].toProprietary('googlev3'));
 		}
-
+		
 		var polyOptions = {
 			path: points,
 			strokeColor: this.color || '#000000',
-			strokeOpacity: 1.0,
-			strokeWeight: 3
+			strokeOpacity: this.opacity || 1.0, 
+			strokeWeight: this.width || 3
 		};
 
 		var polyline = new google.maps.Polyline(polyOptions);
