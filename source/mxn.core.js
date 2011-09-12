@@ -987,6 +987,7 @@ Mapstraction.prototype.addJSON = function(json) {
 					iconShadowSize : item.icon_shadow_size,
 					icon : item.icon,
 					iconSize : item.icon_size,
+					iconAnchor : item.icon_anchor,
 					category : item.source_id,
 					draggable : false,
 					hover : false
