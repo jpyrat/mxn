@@ -989,7 +989,7 @@ Mapstraction.prototype.addJSON = function(json) {
 		item = features[i];
 		switch(item.geometry.type) {
 			case "Point":
-				marker = new Marker(new LatLonPoint(item.geometry.coordinates[0],item.geometry.coordinates[1]));
+				marker = new Marker(new LatLonPoint(item.geometry.coordinates[1],item.geometry.coordinates[0]));
 				markers.push(marker);
 				this.addMarkerWithData(marker,item.properties);
 				break;
@@ -997,7 +997,7 @@ Mapstraction.prototype.addJSON = function(json) {
                 // Create an array of LatLongPoint objects from the coordinates
 				var points = [];
                 for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
-                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][0], item.geometry.coordinates[pi][1])
+                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][1], item.geometry.coordinates[pi][0])
                 }
 				polyline = new Polyline(points);
 				mapstraction.addPolylineWithData(polyline,item.properties);
@@ -1007,7 +1007,7 @@ Mapstraction.prototype.addJSON = function(json) {
                 // Create an array of LatLongPoint objects from the coordinates
 				var points = [];
                 for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
-                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][0], item.geometry.coordinates[pi][1])
+                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][1], item.geometry.coordinates[pi][0])
                 }
 				polyline = new Polyline(points);
                 // A LineString is an unclosed polyline in mapstraction
