@@ -997,21 +997,21 @@ Mapstraction.prototype.addJSON = function(json) {
 				break;
 			case "Polygon":
                 // Create an array of LatLongPoint objects from the coordinates
-				var points = [];
-                for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
-                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][1], item.geometry.coordinates[pi][0]);
+				var polygon_points = [];
+                for (var polygon_pi=0; polygon_pi < item.geometry.coordinates.length; polygon_pi++) {
+                    polygon_points[pi] = new LatLonPoint(item.geometry.coordinates[polygon_pi][1], item.geometry.coordinates[polygon_pi][0]);
                 }
-				polyline = new Polyline(points);
+				polyline = new Polyline(polygon_points);
 				mapstraction.addPolylineWithData(polyline,item.properties);
 				markers.push(polyline);
 				break;
 			case "LineString":
                 // Create an array of LatLongPoint objects from the coordinates
-				var points = [];
-                for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
-                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][1], item.geometry.coordinates[pi][0]);
+				var linestring_points = [];
+                for (var linestring_pi=0; linestring_pi < item.geometry.coordinates.length; linestring_pi++) {
+                    linestring_points[pi] = new LatLonPoint(item.geometry.coordinates[linestring_pi][1], item.geometry.coordinates[linestring_pi][0]);
                 }
-				polyline = new Polyline(points);
+				polyline = new Polyline(linestring_points);
                 // A LineString is an unclosed polyline in mapstraction
                 item.properties.closed = false;
 				mapstraction.addPolylineWithData(polyline,item.properties);
