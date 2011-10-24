@@ -11,6 +11,9 @@
 	<property name="build.base" location="build"/>
 	<property name="build.major" value="2"/>
 	<property name="build.minor" value="0"/>
+	<property name="build.number" value="17"/>
+	
+	<property name="build.version_gis" value="cluster"/>
 	
 	<target name="build">
 		<!-- generate build number -->
@@ -19,7 +22,7 @@
 			<format property="YEAR" pattern="yyyy"/>
 		</tstamp>
 		<property name="build.ver" value="${build.major}.${build.minor}.${build.number}"/>
-		<property name="build.dir" location="${build.base}/${build.ver}"/>
+		<property name="build.dir" location="${build.base}/${build.version_gis}/mxn-gis-${build.version_gis}"/>
 		
 		<!-- make our build directory -->
 		<mkdir dir="${build.dir}"/>
@@ -60,17 +63,7 @@
 			<arg value="-d=${build.dir}/docs"/>
 		</java>
 		
-		<!-- minify our sources -->
-		<echo>--- MIN ---</echo>
-		<for param="file">
-			<path>
-				<fileset dir="${build.dir}" includes="*.js"/>
-			</path>
-			<sequential>
-				<propertyregex override="yes" property="minfile" input="@{file}" regexp=".*[\/\\]([a-z0-9\.]+)\.js" replace="\1-min.js"/>
-				<java jar="tools/yui-compressor/yuicompressor-2.4.2.jar" args="-o ${build.dir}/${minfile} @{file}" fork="true" failonerror="true"/>
-			</sequential>
-		</for>		
+	
 		
 		<!-- prepend our copyright and license notice -->
 		<echo>--- COPYRIGHT ---</echo>
@@ -90,7 +83,7 @@
 			</sequential>
 		</for>
 		
-		<zip destfile="${build.base}/mxn-${build.ver}.zip" basedir="${build.dir}"/>
+		<zip destfile="${build.base}/mxn-gis-${build.version_gis}.zip" basedir="${build.base}/${build.version_gis}"/>
 		
 	</target>
 </project>
