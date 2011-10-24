@@ -961,13 +961,13 @@ Mapstraction.prototype.setImagePosition = function(id) {
  * { "type": "FeatureCollection",
  *  "features": [
  *    { "type": "Feature",
- *      "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+ *      "geometry": {"type": "Point", "coordinates": [48.15,-4.12]},
  *      "properties": {"prop0": "value0", "icon": "http://icon.url/", "infoBubble": "Contents of bubble"}
  *      }
  *    }
  *  }
  *
- * @param {json} GeoJSON formatted JSON object. Keys for properties are: id, title, description, date, icon, icon_size, icon_shadow, icon_shadow_size.
+ * @param {json} GeoJSON formatted JSON object. Keys for properties are the same used in addData().
  */
 Mapstraction.prototype.addJSON = function(json) {
 	var features;
