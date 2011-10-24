@@ -1009,7 +1009,7 @@ Mapstraction.prototype.addJSON = function(json) {
                 // Create an array of LatLongPoint objects from the coordinates
 				var points = [];
                 for (var pi=0; pi < item.geometry.coordinates.length; pi++) {
-                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][1], item.geometry.coordinates[pi][0])
+                    points[pi] = new LatLonPoint(item.geometry.coordinates[pi][1], item.geometry.coordinates[pi][0]);
                 }
 				polyline = new Polyline(points);
                 // A LineString is an unclosed polyline in mapstraction
