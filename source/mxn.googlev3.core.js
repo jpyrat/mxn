@@ -92,11 +92,11 @@ Mapstraction: {
 		var map = this.maps[this.api];
 		var myOptions = [];
 		if (this.options.enableDragging) {
-			myOptions.draggable = true;
+			myOptions.draggable = this.options.enableDragging;
 		} 
 		if (this.options.enableScrollWheelZoom){
 			myOptions.scrollwheel = true;
-		} 
+		}
 		map.setOptions(myOptions);
 	},
 
