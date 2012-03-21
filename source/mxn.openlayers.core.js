@@ -474,39 +474,26 @@ mxn.register('openlayers', {
 			var marker = new OpenLayers.Marker(this.location.toProprietary("openlayers"), this.icon);
 
 			if(this.infoBubble) {
-				popup = new OpenLayers.Popup.FramedCloud(null,
-					this.location.toProprietary("openlayers"),
-					new OpenLayers.Size(100,100),
-					this.infoBubble,
-					this.icon,
-					true
-				);
-				var theMap = this.map;
 				if(this.hover) {
 					marker.events.register("mouseover", marker, function(event) {
-						theMap.addPopup(popup);
-						popup.show();
+						marker.mapstraction_marker.openBubble();
 					});
 					marker.events.register("mouseout", marker, function(event) {
-						popup.hide();
-						theMap.removePopup(popup);
+						marker.mapstraction_marker.closeBubble();
 					});
 				}
 				else {
 					var shown = false;
 					marker.events.register("mousedown", marker, function(event) {
 						if (shown) {
-							popup.hide();
-							theMap.removePopup(popup);
+							marker.mapstraction_marker.closeBubble();
 							shown = false;
 						} else {
-							theMap.addPopup(popup);
-							popup.show();
+							marker.mapstraction_marker.openBubble();
 							shown = true;
 						}
 					});
 				}
-				this.popup = popup;
 			}
 			
 			//fire click event for marker
@@ -531,27 +518,31 @@ mxn.register('openlayers', {
 			return marker;
 		},
 
-		openBubble: function() {		
-			if ( this.infoBubble ) {
+		openBubble: function() {
+			var popup;
+			if (!this.hasOwnProperty('proprietary_infowindow') || this.proprietary_infowindow === null) {
 				// Need to create a new popup in case setInfoBubble has been called
-				this.popup = new OpenLayers.Popup.FramedCloud(null,
+				popup = new OpenLayers.Popup.FramedCloud(null,
 					this.location.toProprietary("openlayers"),
 					new OpenLayers.Size(100,100),
 					this.infoBubble,
 					this.icon,
 					true
 				);
+			} else {
+				popup = this.proprietary_infowindow;
 			}
-
-			if ( this.popup ) {
-				this.map.addPopup( this.popup, true );
-			}
+			this.openInfoBubble.fire({'marker': this});
+			this.map.addPopup(popup);
+			popup.show();
+			this.proprietary_infowindow = popup; // Save so we can close it later
 		},
 
 		closeBubble: function() {
-			if ( this.popup ) {
-				this.popup.hide();
-				this.map.removePopup( this.popup );
+			if (this.hasOwnProperty('proprietary_infowindow') && this.proprietary_infowindow !== null) {
+				this.proprietary_infowindow.hide();
+				this.map.removePopup(this.proprietary_infowindow);
+				this.closeInfoBubble.fire({ 'marker': this });
 			}
 		},
 
