@@ -469,7 +469,7 @@ mxn.register('openlayers', {
 				this.icon = new OpenLayers.Icon(this.iconUrl, size, anchor);
 			}
 			else {
-				this.icon = new OpenLayers.Icon('http://openlayers.org/dev/img/marker-gold.png', size, anchor);
+				this.icon = new OpenLayers.Icon('http://dev.openlayers.org/releases/OpenLayers-2.13/img/marker-gold.png', size, anchor);
 			}
 			var marker = new OpenLayers.Marker(this.location.toProprietary("openlayers"), this.icon);
 
@@ -515,7 +515,7 @@ mxn.register('openlayers', {
 			});
 
 			if(this.hoverIconUrl) {
-				var icon = this.iconUrl || 'http://openlayers.org/dev/img/marker-gold.png';
+				var icon = this.iconUrl || 'http://dev.openlayers.org/releases/OpenLayers-2.13/img/marker-gold.png';
 				var hovericon = this.hoverIconUrl;
 				marker.events.register("mouseover", marker, function(event) {
 					marker.setUrl(hovericon);
